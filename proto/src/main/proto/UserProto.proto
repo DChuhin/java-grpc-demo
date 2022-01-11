@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+import "google/protobuf/wrappers.proto";
+
+package com.example.proto;
+
+message User {
+  uint32 id = 1;
+  string name = 2;
+}
+
+service UserService {
+  rpc GetUser (google.protobuf.UInt32Value) returns (User) {}
+  rpc AddUser (User) returns (google.protobuf.UInt32Value) {}
+}
