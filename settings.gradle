@@ -1,12 +1,5 @@
 rootProject.name = 'java-grpc-demo'
 include 'proto'
 include 'client'
-
-def grpcVersion = '1.42.1'
-
-ext.grpc = [
-        protobuf: "io.grpc:grpc-protobuf:${grpcVersion}",
-        stub: "io.grpc:grpc-stub:${grpcVersion}",
-]
 include 'service'
 
