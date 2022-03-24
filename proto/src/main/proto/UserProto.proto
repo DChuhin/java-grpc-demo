@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 import "google/protobuf/wrappers.proto";
+import "google/api/annotations.proto";
 
 package com.example.proto;
 
@@ -9,7 +10,53 @@ message User {
   string name = 2;
 }
 
+message GetUsersParams {}
+message AddUsersResponse {
+  repeated google.protobuf.UInt32Value users = 1;
+}
+
+message FindUsersParams {
+  string nameStartsWith = 1;
+}
+message FindUsersResponse {
+  repeated User users = 1;
+}
+
+message EncodingsDemoParams {
+  string stringExample = 1;
+  uint32 varint = 2;
+  fixed64 fixedLengthNumber = 3;
+  float floatNumber = 4;
+}
+
+message EncodingsDemoResponse {}
+
 service UserService {
-  rpc GetUser (google.protobuf.UInt32Value) returns (User) {}
-  rpc AddUser (User) returns (google.protobuf.UInt32Value) {}
+  rpc GetUser (google.protobuf.UInt32Value) returns (User) {
+    option (google.api.http) = {
+      get: "/user/{value}"
+    };
+  }
+
+
+  rpc AddUser (User) returns (google.protobuf.UInt32Value) {
+    option (google.api.http) = {
+      post: "/user",
+      body: "*"
+    };
+  }
+  /**
+      Client side streaming
+   */
+  rpc AddUsers (stream User) returns (AddUsersResponse) {}
+  /**
+      Server side streaming
+   */
+  rpc GetUsers (GetUsersParams) returns (stream User) {}
+  /**
+      Bidirectional streaming
+   */
+  rpc findUsers (stream FindUsersParams) returns (stream FindUsersResponse);
+
+  rpc encodingsDemo (EncodingsDemoParams) returns (EncodingsDemoResponse);
 }
